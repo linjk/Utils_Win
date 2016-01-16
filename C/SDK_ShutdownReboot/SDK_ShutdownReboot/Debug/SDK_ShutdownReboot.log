@@ -1,0 +1,17 @@
+﻿Build started 2016/1/15 23:24:00.
+     1>Project "C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\SDK_ShutdownReboot\SDK_ShutdownReboot.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt shutdownreboot.cpp
+         shutdownreboot.cpp
+     1>c:\users\lin\desktop\github\utils_win\c\sdk_shutdownreboot\sdk_shutdownreboot\shutdownreboot.cpp(44): warning C4996: 'GetVersionExW': 被声明为已否决
+                 c:\program files (x86)\windows kits\8.1\include\um\sysinfoapi.h(442) : 参见“GetVersionExW”的声明
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\Debug\SDK_ShutdownReboot.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\SDK_ShutdownReboot.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\Debug\SDK_ShutdownReboot.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\Debug\SDK_ShutdownReboot.lib" /MACHINE:X86 Debug\shutdownreboot.obj
+         SDK_ShutdownReboot.vcxproj -> C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\Debug\SDK_ShutdownReboot.exe
+       Manifest:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\mt.exe /nologo /verbose /out:"C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\Debug\SDK_ShutdownReboot.exe.manifest" /manifest Debug\SDK_ShutdownReboot.exe.intermediate.manifest
+     1>Done Building Project "C:\Users\lin\Desktop\GitHub\Utils_Win\C\SDK_ShutdownReboot\SDK_ShutdownReboot\SDK_ShutdownReboot.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.21
