@@ -19,6 +19,8 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #include <windows.h>
+#include <Urlmon.h>
+#pragma comment(lib, "Urlmon.lib")
 
 // Windows Socket Files:
 #include <winsock2.h>
