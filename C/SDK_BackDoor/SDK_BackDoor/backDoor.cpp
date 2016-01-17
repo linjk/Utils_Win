@@ -70,8 +70,8 @@ DWORD WINAPI ThreadOutputProc(LPVOID lpParam){
 			if (bRet && dwReadLen > 0) {
 				SendData(tNode.m_Sock, szBuf, dwReadLen);//将结果通过网络发送出去
 			}
-			Sleep(50);
 		}
+		Sleep(50);
 	}
 	return TRUE;
 }
